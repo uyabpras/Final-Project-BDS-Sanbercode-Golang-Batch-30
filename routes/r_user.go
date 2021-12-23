@@ -2,8 +2,10 @@ package routes
 
 import (
 	"final/controller"
+	"final/middlewares"
 
 	"github.com/gin-gonic/gin"
+
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"gorm.io/gorm"
@@ -16,12 +18,15 @@ func Setuprouter(db *gorm.DB) *gin.Engine {
 	r.Use(func(c *gin.Context) {
 		c.Set("db", db)
 	})
+	r.POST("/login", controller.Login)
+	r.POST("register", controller.Register)
 
-	r.GET("/user", controller.Getalluser)
-	r.POST("/user", controller.CreateUser)
-	r.GET("/user/:id", controller.GetuserById)
-	r.PATCH("/user/:username", controller.UpdatePasswordUser)
-	r.DELETE("/user/:id", controller.Deleteuser)
+	UserMiddlewareRoute := r.Group("/user")
+	UserMiddlewareRoute.Use(middlewares.JwtAuthMiddleware())
+	UserMiddlewareRoute.GET("", controller.Getalluser)
+	UserMiddlewareRoute.GET("/:id", controller.GetuserById)
+	UserMiddlewareRoute.PATCH("/:username", controller.UpdatePasswordUser)
+	UserMiddlewareRoute.DELETE("/:id", controller.Deleteuser)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return r

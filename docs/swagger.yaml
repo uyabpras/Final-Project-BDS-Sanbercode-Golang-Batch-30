@@ -1,4 +1,14 @@
 definitions:
+  controller.UserAuth:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
   controller.UserInput:
     properties:
       password:
@@ -32,6 +42,12 @@ paths:
   /User:
     get:
       description: getting all data user which includes username n password
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -41,6 +57,8 @@ paths:
             items:
               $ref: '#/definitions/models.User'
             type: array
+      security:
+      - BearerToken: []
       summary: geting all data user
       tags:
       - User
@@ -53,6 +71,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/controller.UserInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -62,6 +85,8 @@ paths:
             items:
               $ref: '#/definitions/models.User'
             type: array
+      security:
+      - BearerToken: []
       summary: creating all data user
       tags:
       - User
@@ -74,6 +99,11 @@ paths:
         name: id
         required: true
         type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -83,6 +113,8 @@ paths:
             additionalProperties:
               type: boolean
             type: object
+      security:
+      - BearerToken: []
       summary: delete data user by id
       tags:
       - User
@@ -94,6 +126,11 @@ paths:
         name: id
         required: true
         type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -103,6 +140,8 @@ paths:
             items:
               $ref: '#/definitions/models.User'
             type: array
+      security:
+      - BearerToken: []
       summary: geting data user by id
       tags:
       - User
@@ -121,6 +160,11 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/controller.UserInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -130,7 +174,51 @@ paths:
             items:
               $ref: '#/definitions/models.User'
             type: array
+      security:
+      - BearerToken: []
       summary: update data by Username
       tags:
       - User
+  /login:
+    post:
+      description: Logging in to get jwt token to access admin or user api by roles.
+      parameters:
+      - description: the body to login a user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.UserAuth'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login as as user.
+      tags:
+      - Auth
+  /register:
+    post:
+      description: registering a user from public access.
+      parameters:
+      - description: the body to register a user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.UserAuth'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Register a user.
+      tags:
+      - Auth
 swagger: "2.0"

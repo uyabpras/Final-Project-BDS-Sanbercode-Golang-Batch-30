@@ -34,6 +34,11 @@ var doc = `{
     "paths": {
         "/User": {
             "get": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
                 "description": "getting all data user which includes username n password",
                 "produces": [
                     "application/json"
@@ -42,6 +47,15 @@ var doc = `{
                     "User"
                 ],
                 "summary": "geting all data user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization. How to input in swagger : 'Bearer \u003cinsert_your_token_here\u003e'",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -55,6 +69,11 @@ var doc = `{
                 }
             },
             "post": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
                 "description": "creating all data user which input username n password",
                 "produces": [
                     "application/json"
@@ -72,6 +91,13 @@ var doc = `{
                         "schema": {
                             "$ref": "#/definitions/controller.UserInput"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization. How to input in swagger : 'Bearer \u003cinsert_your_token_here\u003e'",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -89,6 +115,11 @@ var doc = `{
         },
         "/User/username": {
             "patch": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
                 "description": "update password user by username",
                 "produces": [
                     "application/json"
@@ -113,6 +144,13 @@ var doc = `{
                         "schema": {
                             "$ref": "#/definitions/controller.UserInput"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization. How to input in swagger : 'Bearer \u003cinsert_your_token_here\u003e'",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -130,6 +168,11 @@ var doc = `{
         },
         "/User/{id}": {
             "get": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
                 "description": "getting data user by id which includes username n password",
                 "produces": [
                     "application/json"
@@ -144,6 +187,13 @@ var doc = `{
                         "description": "data user by id ",
                         "name": "id",
                         "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization. How to input in swagger : 'Bearer \u003cinsert_your_token_here\u003e'",
+                        "name": "Authorization",
+                        "in": "header",
                         "required": true
                     }
                 ],
@@ -160,6 +210,11 @@ var doc = `{
                 }
             },
             "delete": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
                 "description": "delete data user by id which includes username n password",
                 "produces": [
                     "application/json"
@@ -175,6 +230,13 @@ var doc = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization. How to input in swagger : 'Bearer \u003cinsert_your_token_here\u003e'",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
                     }
                 ],
                 "responses": {
@@ -189,9 +251,88 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/login": {
+            "post": {
+                "description": "Logging in to get jwt token to access admin or user api by roles.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login as as user.",
+                "parameters": [
+                    {
+                        "description": "the body to login a user",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.UserAuth"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/register": {
+            "post": {
+                "description": "registering a user from public access.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Register a user.",
+                "parameters": [
+                    {
+                        "description": "the body to register a user",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.UserAuth"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "controller.UserAuth": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "controller.UserInput": {
             "type": "object",
             "properties": {
