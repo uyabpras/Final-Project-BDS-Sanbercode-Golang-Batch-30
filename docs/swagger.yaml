@@ -1,0 +1,136 @@
+definitions:
+  controller.UserInput:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.User:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      update_at:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+paths:
+  /User:
+    get:
+      description: getting all data user which includes username n password
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      summary: geting all data user
+      tags:
+      - User
+    post:
+      description: creating all data user which input username n password
+      parameters:
+      - description: the body to create new user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.UserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      summary: creating all data user
+      tags:
+      - User
+  /User/{id}:
+    delete:
+      description: delete data user by id which includes username n password
+      parameters:
+      - description: 'data user by id '
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      summary: delete data user by id
+      tags:
+      - User
+    get:
+      description: getting data user by id which includes username n password
+      parameters:
+      - description: 'data user by id '
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      summary: geting data user by id
+      tags:
+      - User
+  /User/username:
+    patch:
+      description: update password user by username
+      parameters:
+      - description: update password by username
+        in: path
+        name: username
+        required: true
+        type: string
+      - description: the body to updated password
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.UserInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      summary: update data by Username
+      tags:
+      - User
+swagger: "2.0"
