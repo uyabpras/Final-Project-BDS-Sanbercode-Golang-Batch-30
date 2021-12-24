@@ -25,7 +25,7 @@ func Setuprouter(db *gorm.DB) *gin.Engine {
 	UserMiddlewareRoute.Use(middlewares.JwtAuthMiddleware())
 	UserMiddlewareRoute.GET("", controller.Getalluser)
 	UserMiddlewareRoute.GET("/:id", controller.GetuserById)
-	UserMiddlewareRoute.PATCH("/:username", controller.UpdatePasswordUser)
+	UserMiddlewareRoute.PATCH("", controller.UpdatePasswordUser)
 	UserMiddlewareRoute.DELETE("/:id", controller.Deleteuser)
 
 	ProductMiddlewareRoute := r.Group("/product")

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"final/models"
+	"final/utils/token"
 	"net/http"
 	"time"
 
@@ -58,20 +59,26 @@ func CreateUser(ctx *gin.Context) {
 }
 
 // Get Username by id godoc
-// @Summary geting data user by id
-// @Description getting data user by id which includes username n password
+// @Summary geting data user by extracting jwt token
+// @Description getting data user by extracting jwt token which includes username n password
 // @Tags User
 // @Produce json
 // @param id path string true "data user by id "
 // @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
 // @Security BearerToken
 // @Success 200 {object} []models.User
-// @router /User/{id} [get]
+// @router /User/ [get]
 func GetuserById(ctx *gin.Context) {
 	var users models.User
 	db := ctx.MustGet("db").(*gorm.DB)
 
-	if err := db.Where("id = ?", ctx.Param("id")).Find(&users).Error; err != nil {
+	ID, err := token.ExtractTokenID(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, "unauthorized")
+		return
+	}
+
+	if err := db.Where("id = ?", ID).Find(&users).Error; err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "record not found"})
 		return
 	}
@@ -80,8 +87,8 @@ func GetuserById(ctx *gin.Context) {
 }
 
 // Update passowrd
-// @Summary update data by Username
-// @Description update password user by username
+// @Summary update data by extracting jwt token
+// @Description update password user by extracting jwt token
 // @Tags User
 // @Produce json
 // @param username path string true "update password by username"
@@ -89,17 +96,22 @@ func GetuserById(ctx *gin.Context) {
 // @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
 // @Security BearerToken
 // @Success 200 {object} []models.User
-// @router /User/username [patch]
+// @router /User [patch]
 func UpdatePasswordUser(ctx *gin.Context) {
 	// check data
 	var users models.User
 	db := ctx.MustGet("db").(*gorm.DB)
 
-	if err := db.Where("username = ?", ctx.Param("username")).Find(&users).Error; err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "record not found"})
+	ID, err := token.ExtractTokenID(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, "unauthorized")
 		return
 	}
 
+	if err := db.Where("id = ?", ID).Find(&users).Error; err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "record not found"})
+		return
+	}
 	//input data
 	var input UserInput
 
@@ -116,12 +128,12 @@ func UpdatePasswordUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": users})
 }
 
-// Get Username by id godoc
-// @Summary delete data user by id
-// @Description delete data user by id which includes username n password
+// Get Username by extracting jwt token godoc
+// @Summary delete data user by extracting jwt token
+// @Description delete data user by extracting jwt token which includes username n password
 // @Tags User
 // @Produce json
-// @param id path string true "data user by id "
+// @param id path string true "data user by extracting jwt token "
 // @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
 // @Security BearerToken
 // @Success 200 {object} map[string]boolean
@@ -129,8 +141,13 @@ func UpdatePasswordUser(ctx *gin.Context) {
 func Deleteuser(ctx *gin.Context) {
 	var users models.User
 	db := ctx.MustGet("db").(*gorm.DB)
+	ID, err := token.ExtractTokenID(ctx)
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, "unauthorized")
+		return
+	}
 
-	if err := db.Where("id = ?", ctx.Param("id")).Find(&users).Error; err != nil {
+	if err := db.Where("id = ?", ID).Find(&users).Error; err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "record not found"})
 		return
 	}

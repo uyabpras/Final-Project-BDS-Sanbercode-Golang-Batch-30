@@ -6,6 +6,13 @@ definitions:
       price:
         type: integer
     type: object
+  controller.StoreInput:
+    properties:
+      city:
+        type: string
+      name:
+        type: string
+    type: object
   controller.UserAuth:
     properties:
       password:
@@ -33,6 +40,19 @@ definitions:
         type: string
       price:
         type: integer
+      update_at:
+        type: string
+    type: object
+  models.Store:
+    properties:
+      city:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
       update_at:
         type: string
     type: object
@@ -82,92 +102,8 @@ paths:
       summary: geting all data user
       tags:
       - User
-    post:
-      description: creating all data user which input username n password
-      parameters:
-      - description: the body to create new user
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/controller.UserInput'
-      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.User'
-            type: array
-      security:
-      - BearerToken: []
-      summary: creating all data user
-      tags:
-      - User
-  /User/{id}:
-    delete:
-      description: delete data user by id which includes username n password
-      parameters:
-      - description: 'data user by id '
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: boolean
-            type: object
-      security:
-      - BearerToken: []
-      summary: delete data user by id
-      tags:
-      - User
-    get:
-      description: getting data user by id which includes username n password
-      parameters:
-      - description: 'data user by id '
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.User'
-            type: array
-      security:
-      - BearerToken: []
-      summary: geting data user by id
-      tags:
-      - User
-  /User/username:
     patch:
-      description: update password user by username
+      description: update password user by extracting jwt token
       parameters:
       - description: update password by username
         in: path
@@ -196,7 +132,93 @@ paths:
             type: array
       security:
       - BearerToken: []
-      summary: update data by Username
+      summary: update data by extracting jwt token
+      tags:
+      - User
+    post:
+      description: creating all data user which input username n password
+      parameters:
+      - description: the body to create new user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.UserInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      security:
+      - BearerToken: []
+      summary: creating all data user
+      tags:
+      - User
+  /User/:
+    get:
+      description: getting data user by extracting jwt token which includes username
+        n password
+      parameters:
+      - description: 'data user by id '
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      security:
+      - BearerToken: []
+      summary: geting data user by extracting jwt token
+      tags:
+      - User
+  /User/{id}:
+    delete:
+      description: delete data user by extracting jwt token which includes username
+        n password
+      parameters:
+      - description: 'data user by extracting jwt token '
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - BearerToken: []
+      summary: delete data user by extracting jwt token
       tags:
       - User
   /login:
@@ -286,7 +308,7 @@ paths:
       - Product
   /product/{name}:
     delete:
-      description: delete data Product by id which includes Productname n password
+      description: delete data Product by name
       parameters:
       - description: 'data Product by name '
         in: path
@@ -309,13 +331,13 @@ paths:
             type: object
       security:
       - BearerToken: []
-      summary: delete data Product by id
+      summary: delete data Product by name
       tags:
       - Product
   /product/filters:
     get:
-      description: Get filters price product, using param= "price1" for ">=" and "price2"
-        for "<="
+      description: Get filters price product, using query param= "price1" for ">="
+        and "price2" for "<="
       produces:
       - application/json
       responses:
@@ -409,4 +431,90 @@ paths:
       summary: Register a user.
       tags:
       - Auth
+  /store:
+    get:
+      description: getting all data store
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Store'
+            type: array
+      summary: geting all data store
+      tags:
+      - store
+    post:
+      description: creating data store which input store name n city
+      parameters:
+      - description: the body to create new store
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.StoreInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Store'
+            type: array
+      security:
+      - BearerToken: []
+      summary: creating  data store
+      tags:
+      - store
+  /store/{name}:
+    delete:
+      description: delete data store by name
+      parameters:
+      - description: 'data store by name '
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: boolean
+            type: object
+      security:
+      - BearerToken: []
+      summary: delete data store by name
+      tags:
+      - store
+  /store/newest:
+    get:
+      description: Get newest data store
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Store'
+            type: array
+      summary: Get newest data store
+      tags:
+      - store
 swagger: "2.0"

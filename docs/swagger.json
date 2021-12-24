@@ -92,23 +92,21 @@
                         }
                     }
                 }
-            }
-        },
-        "/User/username": {
+            },
             "patch": {
                 "security": [
                     {
                         "BearerToken": []
                     }
                 ],
-                "description": "update password user by username",
+                "description": "update password user by extracting jwt token",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "User"
                 ],
-                "summary": "update data by Username",
+                "summary": "update data by extracting jwt token",
                 "parameters": [
                     {
                         "type": "string",
@@ -147,21 +145,21 @@
                 }
             }
         },
-        "/User/{id}": {
+        "/User/": {
             "get": {
                 "security": [
                     {
                         "BearerToken": []
                     }
                 ],
-                "description": "getting data user by id which includes username n password",
+                "description": "getting data user by extracting jwt token which includes username n password",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "User"
                 ],
-                "summary": "geting data user by id",
+                "summary": "geting data user by extracting jwt token",
                 "parameters": [
                     {
                         "type": "string",
@@ -189,25 +187,27 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/User/{id}": {
             "delete": {
                 "security": [
                     {
                         "BearerToken": []
                     }
                 ],
-                "description": "delete data user by id which includes username n password",
+                "description": "delete data user by extracting jwt token which includes username n password",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "User"
                 ],
-                "summary": "delete data user by id",
+                "summary": "delete data user by extracting jwt token",
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "data user by id ",
+                        "description": "data user by extracting jwt token ",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -334,7 +334,7 @@
         },
         "/product/filters": {
             "get": {
-                "description": "Get filters price product, using param= \"price1\" for \"\u003e=\" and \"price2\" for \"\u003c=\"",
+                "description": "Get filters price product, using query param= \"price1\" for \"\u003e=\" and \"price2\" for \"\u003c=\"",
                 "produces": [
                     "application/json"
                 ],
@@ -486,14 +486,14 @@
                         "BearerToken": []
                     }
                 ],
-                "description": "delete data Product by id which includes Productname n password",
+                "description": "delete data Product by name",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Product"
                 ],
-                "summary": "delete data Product by id",
+                "summary": "delete data Product by name",
                 "parameters": [
                     {
                         "type": "string",
@@ -554,6 +554,140 @@
                     }
                 }
             }
+        },
+        "/store": {
+            "get": {
+                "description": "getting all data store",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "store"
+                ],
+                "summary": "geting all data store",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Store"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "creating data store which input store name n city",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "store"
+                ],
+                "summary": "creating  data store",
+                "parameters": [
+                    {
+                        "description": "the body to create new store",
+                        "name": "Body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.StoreInput"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization. How to input in swagger : 'Bearer \u003cinsert_your_token_here\u003e'",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Store"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/store/newest": {
+            "get": {
+                "description": "Get newest data store",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "store"
+                ],
+                "summary": "Get newest data store",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Store"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/store/{name}": {
+            "delete": {
+                "security": [
+                    {
+                        "BearerToken": []
+                    }
+                ],
+                "description": "delete data store by name",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "store"
+                ],
+                "summary": "delete data store by name",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "data store by name ",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization. How to input in swagger : 'Bearer \u003cinsert_your_token_here\u003e'",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "boolean"
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -565,6 +699,17 @@
                 },
                 "price": {
                     "type": "integer"
+                }
+            }
+        },
+        "controller.StoreInput": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
                 }
             }
         },
@@ -608,6 +753,26 @@
                 },
                 "price": {
                     "type": "integer"
+                },
+                "update_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Store": {
+            "type": "object",
+            "properties": {
+                "city": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
                 },
                 "update_at": {
                     "type": "string"

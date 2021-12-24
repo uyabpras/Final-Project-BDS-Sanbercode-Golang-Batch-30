@@ -34,7 +34,7 @@ func Getallstore(ctx *gin.Context) {
 // @Summary creating  data store
 // @Description creating data store which input store name n city
 // @Tags store
-// @param Body body storeInput true "the body to create new store"
+// @param Body body StoreInput true "the body to create new store"
 // @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
 // @Security BearerToken
 // @Produce json
