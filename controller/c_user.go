@@ -2,7 +2,6 @@ package controller
 
 import (
 	"final/models"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -49,7 +48,7 @@ func CreateUser(ctx *gin.Context) {
 	if err := ctx.ShouldBindJSON(&input); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
-	fmt.Println(input.Password)
+
 	users := models.User{Username: input.Username, Password: input.Password}
 	db := ctx.MustGet("db").(*gorm.DB)
 

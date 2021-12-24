@@ -27,6 +27,21 @@ func Setuprouter(db *gorm.DB) *gin.Engine {
 	UserMiddlewareRoute.GET("/:id", controller.GetuserById)
 	UserMiddlewareRoute.PATCH("/:username", controller.UpdatePasswordUser)
 	UserMiddlewareRoute.DELETE("/:id", controller.Deleteuser)
+
+	ProductMiddlewareRoute := r.Group("/product")
+	ProductMiddlewareRoute.GET("", controller.Getallproduct)
+	ProductMiddlewareRoute.GET("/price/asc", controller.GetsortpriceASC)
+	ProductMiddlewareRoute.GET("/price/dsc", controller.GetsortpriceDSC)
+	ProductMiddlewareRoute.GET("/:id", controller.GetproductById)
+	ProductMiddlewareRoute.GET("/newest", controller.GetNewestproduct)
+	ProductMiddlewareRoute.GET("/latest", controller.GetLatestproduct)
+	ProductMiddlewareRoute.GET("/filters", controller.Getfiltersprice)
+
+	//product with auth
+	ProductMiddlewareRoute.Use(middlewares.JwtAuthMiddleware())
+	ProductMiddlewareRoute.POST("", controller.CreateProduct)
+	ProductMiddlewareRoute.DELETE("/:name", controller.DeleteProduct)
+
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return r
