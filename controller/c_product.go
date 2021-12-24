@@ -116,7 +116,7 @@ func GetLatestproduct(ctx *gin.Context) {
 
 // Get filters price product
 // @Summary Get filters price product
-// @Description Get filters price product, using param= "price1" for ">=" and "price2" for "<="
+// @Description Get filters price product, using query param= "price1" for ">=" and "price2" for "<="
 // @Tags Product
 // @Produce json
 // @Success 200 {object} []models.Product
@@ -156,9 +156,9 @@ func CreateProduct(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": Products})
 }
 
-// Get Productname by id godoc
-// @Summary delete data Product by id
-// @Description delete data Product by id which includes Productname n password
+// Get Productname by name godoc
+// @Summary delete data Product by name
+// @Description delete data Product by name
 // @Tags Product
 // @Produce json
 // @param id path string true "data Product by name "
