@@ -1,10 +1,75 @@
 definitions:
+  controller.AddresInput:
+    properties:
+      addresline:
+        type: string
+      city:
+        type: string
+      country:
+        type: string
+      state:
+        type: string
+      userid:
+        type: integer
+    type: object
+  controller.CartInput:
+    properties:
+      productid:
+        type: integer
+      storeid:
+        type: integer
+      userid:
+        type: integer
+    type: object
+  controller.ChangePassword:
+    properties:
+      password:
+        type: string
+    required:
+    - password
+    type: object
+  controller.CheckoutInput:
+    properties:
+      orderid:
+        type: integer
+      storeid:
+        type: integer
+    type: object
+  controller.InventoryInput:
+    properties:
+      productid:
+        type: integer
+      stock:
+        type: integer
+    type: object
+  controller.OrderInput:
+    properties:
+      addresid:
+        type: integer
+      price:
+        type: integer
+      productid:
+        type: integer
+    type: object
   controller.ProductInput:
     properties:
       name:
         type: string
       price:
         type: integer
+    type: object
+  controller.StoreAuth:
+    properties:
+      city:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - city
+    - password
+    - username
     type: object
   controller.StoreInput:
     properties:
@@ -23,12 +88,76 @@ definitions:
     - password
     - username
     type: object
-  controller.UserInput:
+  models.Addres:
     properties:
-      password:
+      addres_line:
         type: string
-      username:
+      city:
         type: string
+      country:
+        type: string
+      created_at:
+        type: string
+      id:
+        type: integer
+      postal_code:
+        type: integer
+      state:
+        type: string
+      update_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  models.Cart:
+    properties:
+      id:
+        type: integer
+      product_id:
+        type: integer
+      store_id:
+        type: integer
+      user_id:
+        type: integer
+    type: object
+  models.Checkout:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      orderitem_id:
+        type: integer
+      store_id:
+        type: integer
+    type: object
+  models.Inventory:
+    properties:
+      created_at:
+        type: string
+      product_id:
+        type: integer
+      stock:
+        type: integer
+      store_id:
+        type: integer
+      update_at:
+        type: string
+    type: object
+  models.Orderitem:
+    properties:
+      addres_id:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      price_total:
+        type: integer
+      product_id:
+        type: integer
+      user_id:
+        type: integer
     type: object
   models.Product:
     properties:
@@ -51,9 +180,11 @@ definitions:
         type: string
       id:
         type: integer
-      name:
+      password:
         type: string
       update_at:
+        type: string
+      username:
         type: string
     type: object
   models.User:
@@ -80,119 +211,6 @@ info:
   termsOfService: http://swagger.io/terms/
 paths:
   /User:
-    get:
-      description: getting all data user which includes username n password
-      parameters:
-      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.User'
-            type: array
-      security:
-      - BearerToken: []
-      summary: geting all data user
-      tags:
-      - User
-    patch:
-      description: update password user by extracting jwt token
-      parameters:
-      - description: update password by username
-        in: path
-        name: username
-        required: true
-        type: string
-      - description: the body to updated password
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/controller.UserInput'
-      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.User'
-            type: array
-      security:
-      - BearerToken: []
-      summary: update data by extracting jwt token
-      tags:
-      - User
-    post:
-      description: creating all data user which input username n password
-      parameters:
-      - description: the body to create new user
-        in: body
-        name: Body
-        required: true
-        schema:
-          $ref: '#/definitions/controller.UserInput'
-      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.User'
-            type: array
-      security:
-      - BearerToken: []
-      summary: creating all data user
-      tags:
-      - User
-  /User/:
-    get:
-      description: getting data user by extracting jwt token which includes username
-        n password
-      parameters:
-      - description: 'data user by id '
-        in: path
-        name: id
-        required: true
-        type: string
-      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.User'
-            type: array
-      security:
-      - BearerToken: []
-      summary: geting data user by extracting jwt token
-      tags:
-      - User
-  /User/{id}:
     delete:
       description: delete data user by extracting jwt token which includes username
         n password
@@ -221,6 +239,406 @@ paths:
       summary: delete data user by extracting jwt token
       tags:
       - User
+    get:
+      description: getting data user by extracting jwt token which includes username
+        n password
+      parameters:
+      - description: 'data user by id '
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      security:
+      - BearerToken: []
+      summary: geting data user by extracting jwt token
+      tags:
+      - User
+  /addres:
+    get:
+      description: getting data addres by extracting jwt token
+      parameters:
+      - description: 'data address by id '
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Addres'
+            type: array
+      security:
+      - BearerToken: []
+      summary: geting data addres by extracting jwt token
+      tags:
+      - Addres
+    post:
+      description: creating data Addres for order item which includes addressline,
+        city, state and country
+      parameters:
+      - description: the body to create new Product
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.AddresInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Addres'
+            type: array
+      security:
+      - BearerToken: []
+      summary: creating  data Addres
+      tags:
+      - Addres
+  /addres/:id:
+    delete:
+      description: deleting data addres user by extracting jwt token and selecting
+        addres for delete using addres id
+      parameters:
+      - description: 'data address by id '
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Addres'
+            type: array
+      security:
+      - BearerToken: []
+      summary: deleting data addres user by extracting jwt token and selecting addres
+        for delete using addres id
+      tags:
+      - Addres
+    patch:
+      description: update addres user by extracting jwt token
+      parameters:
+      - description: update addres
+        in: path
+        name: username
+        required: true
+        type: string
+      - description: the body to updated addres
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.AddresInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Addres'
+            type: array
+      security:
+      - BearerToken: []
+      summary: update addres user by extracting jwt token
+      tags:
+      - User
+  /cart:
+    get:
+      description: getting data cart by extracting jwt token
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Cart'
+            type: array
+      security:
+      - BearerToken: []
+      summary: geting data cart by extracting jwt token
+      tags:
+      - Cart
+    post:
+      description: creating cart which input productid n storeid
+      parameters:
+      - description: the body to create new cart
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.CartInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Cart'
+            type: array
+      security:
+      - BearerToken: []
+      summary: creating cart product
+      tags:
+      - Cart
+  /cart/:id:
+    delete:
+      description: deleting data cart user by extracting jwt token and selecting cart
+        for delete using cart id
+      parameters:
+      - description: 'data cart by id '
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Cart'
+            type: array
+      security:
+      - BearerToken: []
+      summary: deleting data cart user by extracting jwt token and selecting cart
+        for delete using cart id
+      tags:
+      - Cart
+  /checkout:
+    get:
+      description: getting data checkout by extracting jwt token
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Checkout'
+            type: array
+      security:
+      - BearerToken: []
+      summary: geting data checlout by extracting jwt token
+      tags:
+      - User
+    post:
+      description: creating data Checkout which input storeID n orderID
+      parameters:
+      - description: the body to create new Checkout
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.CheckoutInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Checkout'
+            type: array
+      security:
+      - BearerToken: []
+      summary: creating  data checkout
+      tags:
+      - Checkout
+  /checkout/asc:
+    get:
+      description: getting data checkout by extracting jwt token (ascending)
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Checkout'
+            type: array
+      security:
+      - BearerToken: []
+      summary: geting data checlout by extracting jwt token (ascending)
+      tags:
+      - User
+  /checkout/desc:
+    get:
+      description: getting data checkout by extracting jwt token (descending)
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Checkout'
+            type: array
+      security:
+      - BearerToken: []
+      summary: geting data checlout by extracting jwt token (descending)
+      tags:
+      - User
+  /inventory:
+    get:
+      description: getting data inventory by extracting jwt token
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Inventory'
+            type: array
+      security:
+      - BearerToken: []
+      summary: geting data checlout by extracting jwt token
+      tags:
+      - User
+    post:
+      description: creating data inventory which input storeID n productID
+      parameters:
+      - description: the body to create new inventory
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.InventoryInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Inventory'
+            type: array
+      security:
+      - BearerToken: []
+      summary: creating  data inventory
+      tags:
+      - inventory
+  /inventory/desc:
+    get:
+      description: getting data inventory by extracting jwt token (descending)
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Inventory'
+            type: array
+      security:
+      - BearerToken: []
+      summary: geting data checlout by extracting jwt token (descending)
+      tags:
+      - User
   /login:
     post:
       description: Logging in to get jwt token to access admin or user api by roles.
@@ -242,6 +660,56 @@ paths:
       summary: Login as as user.
       tags:
       - Auth
+  /login-store:
+    post:
+      description: Logging in to get jwt token to access admin or store api by roles.
+      parameters:
+      - description: the body to login a store
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.StoreAuth'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Login as as store.
+      tags:
+      - Auth
+  /order:
+    post:
+      description: creating data order which input productID, price n addres id
+      parameters:
+      - description: the body to create new order
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.OrderInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Orderitem'
+            type: array
+      security:
+      - BearerToken: []
+      summary: creating  data order
+      tags:
+      - order
   /product:
     get:
       description: getting all data product
@@ -310,11 +778,6 @@ paths:
     delete:
       description: delete data Product by name
       parameters:
-      - description: 'data Product by name '
-        in: path
-        name: id
-        required: true
-        type: string
       - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
         in: header
         name: Authorization
@@ -431,58 +894,31 @@ paths:
       summary: Register a user.
       tags:
       - Auth
-  /store:
-    get:
-      description: getting all data store
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/models.Store'
-            type: array
-      summary: geting all data store
-      tags:
-      - store
+  /register-store:
     post:
-      description: creating data store which input store name n city
+      description: registering a store from public access.
       parameters:
-      - description: the body to create new store
+      - description: the body to register a store
         in: body
         name: Body
         required: true
         schema:
-          $ref: '#/definitions/controller.StoreInput'
-      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
-        in: header
-        name: Authorization
-        required: true
-        type: string
+          $ref: '#/definitions/controller.StoreAuth'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            items:
-              $ref: '#/definitions/models.Store'
-            type: array
-      security:
-      - BearerToken: []
-      summary: creating  data store
+            additionalProperties: true
+            type: object
+      summary: Register a store.
       tags:
-      - store
-  /store/{name}:
+      - Auth
+  /store:
     delete:
       description: delete data store by name
       parameters:
-      - description: 'data store by name '
-        in: path
-        name: id
-        required: true
-        type: string
       - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
         in: header
         name: Authorization
@@ -502,9 +938,14 @@ paths:
       summary: delete data store by name
       tags:
       - store
-  /store/newest:
     get:
-      description: Get newest data store
+      description: getting all data store
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -514,7 +955,102 @@ paths:
             items:
               $ref: '#/definitions/models.Store'
             type: array
+      security:
+      - BearerToken: []
+      summary: geting all data store
+      tags:
+      - store
+    patch:
+      description: update store
+      parameters:
+      - description: the body to updated data store
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.StoreInput'
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      security:
+      - BearerToken: []
+      summary: update data store
+      tags:
+      - Store
+  /store/newest:
+    get:
+      description: Get newest data store
+      parameters:
+      - description: 'Authorization. How to input in swagger : ''Bearer <insert_your_token_here>'''
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Store'
+            type: array
+      security:
+      - BearerToken: []
       summary: Get newest data store
       tags:
       - store
+  /update-store:
+    patch:
+      description: update a store from public access.
+      parameters:
+      - description: the body to update password store
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.ChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: update password store.
+      tags:
+      - Auth
+  /user:
+    patch:
+      description: update a user from public access.
+      parameters:
+      - description: the body to update password user
+        in: body
+        name: Body
+        required: true
+        schema:
+          $ref: '#/definitions/controller.ChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: update password user.
+      tags:
+      - Auth
 swagger: "2.0"

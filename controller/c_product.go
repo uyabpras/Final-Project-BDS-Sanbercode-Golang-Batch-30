@@ -3,6 +3,7 @@ package controller
 import (
 	"final/models"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -148,7 +149,7 @@ func CreateProduct(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 	}
 
-	Products := models.Product{Name: input.Name, Price: input.Price}
+	Products := models.Product{Name: input.Name, Price: input.Price, CreatedAt: time.Now()}
 	db := ctx.MustGet("db").(*gorm.DB)
 
 	db.Create(&Products)
@@ -161,7 +162,6 @@ func CreateProduct(ctx *gin.Context) {
 // @Description delete data Product by name
 // @Tags Product
 // @Produce json
-// @param id path string true "data Product by name "
 // @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"
 // @Security BearerToken
 // @Success 200 {object} map[string]boolean

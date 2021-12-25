@@ -70,3 +70,20 @@ func (u *User) SaveUser(db *gorm.DB) (*User, error) {
 	}
 	return u, nil
 }
+
+func (u *User) UpdateUser(db *gorm.DB) (*User, error) {
+	//turn password into hash
+	hashedPassword, errPassword := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	if errPassword != nil {
+		return &User{}, errPassword
+	}
+	u.Password = string(hashedPassword)
+	//remove spaces in username
+	u.Username = html.EscapeString(strings.TrimSpace(u.Username))
+
+	var err error = db.Updates(&u).Error
+	if err != nil {
+		return &User{}, err
+	}
+	return u, nil
+}
