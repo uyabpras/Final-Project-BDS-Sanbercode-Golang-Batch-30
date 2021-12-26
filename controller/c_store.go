@@ -83,7 +83,7 @@ func GetNeweststore(ctx *gin.Context) {
 // Update store
 // @Summary update data store
 // @Description update store
-// @Tags Store
+// @Tags store
 // @Produce json
 // @param Body body StoreInput true "the body to updated data store"
 // @Param Authorization header string true "Authorization. How to input in swagger : 'Bearer <insert_your_token_here>'"

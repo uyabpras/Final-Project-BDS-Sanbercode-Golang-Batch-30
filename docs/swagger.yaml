@@ -987,7 +987,7 @@ paths:
       - BearerToken: []
       summary: update data store
       tags:
-      - Store
+      - store
   /store/newest:
     get:
       description: Get newest data store

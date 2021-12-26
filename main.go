@@ -3,6 +3,7 @@ package main
 import (
 	"final/config"
 	"final/routes"
+	"final/utils"
 	"log"
 
 	"final/docs"
@@ -29,7 +30,7 @@ func main() {
 	docs.SwaggerInfo.Title = "Swagger Example API"
 	docs.SwaggerInfo.Description = "This is a sample server Movie."
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "localhost:8080"
+	docs.SwaggerInfo.Host = utils.Getenv("SWAGGER_HOST", "localhost:8080")
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	db := config.ConnectDataBase()

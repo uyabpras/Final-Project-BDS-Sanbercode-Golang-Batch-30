@@ -1206,7 +1206,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Store"
+                    "store"
                 ],
                 "summary": "update data store",
                 "parameters": [
