@@ -32,7 +32,7 @@ func LoginCheckstore(username string, password string, db *gorm.DB) (string, err
 
 	u := Store{}
 
-	err = db.Model(User{}).Where("username = ?", username).Take(&u).Error
+	err = db.Model(Store{}).Where("username = ?", username).Take(&u).Error
 
 	if err != nil {
 		return "", err
